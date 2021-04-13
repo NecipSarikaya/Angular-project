@@ -1,0 +1,81 @@
+<main class="my-4">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <form #form="ngForm" (ngSubmit)="updateUni()" class=" p-3 bg-light">
+          <h1 class="text-center text-primary">Universite Güncelleme</h1>
+          <div class="form-group">
+            <label for="name">Universite Adı</label>
+            <input type="text" required #name="ngModel" [(ngModel)]="university.name" name="name" class="form-control" id="name" />
+            <div class="text-danger m-1" *ngIf="name.invalid && name.touched">
+              <p *ngIf="name.errors.required">Universite Adı alanı girilmesi gereklidir</p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="nameUrl">Universite Url</label>
+            <input [(ngModel)]="university.nameUrl" required #nameUrl="ngModel" name="nameUrl" type="text" class="form-control" id="nameUrl" />
+            <div class="text-danger m-1" *ngIf="nameUrl.invalid && nameUrl.touched">
+              <p *ngIf="nameUrl.errors.required">Universite Url alanı girilmesi gereklidir</p>
+            </div>
+          </div>
+          <button [disabled]="form.invalid" class="btn btn-primary btn-block">Güncelle</button>
+        </form>
+          <hr>
+          <div class="form-row">
+            <div class="form-group col-sm-6">
+              <h3>Sahip Olduğu Bölümler</h3>
+              <div class="form-group">
+                <input type="text" placeholder="Ara..." [(ngModel)]="haveSearch" class="p-2 my-2 form-control">
+              </div>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th >#</th>
+                    <th style="width: 80%;">Name</th>
+                    <th ></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of departments.have  | unisearchfilter : haveSearch ">
+                    <td>{{item.id}}</td>
+                    <td>{{item.name}}</td>
+                    <td>
+                      <button (click)="RemoveDep(item,i)" class="btn btn-danger">✖</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="form-group col-sm-6">
+              <h3>Sahip Olmadığı Bölümler</h3>
+              <div class="form-group">
+                <input type="text" placeholder="Ara..." [(ngModel)]="notHaveSearch" class="p-2 my-2 form-control">
+              </div>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th >#</th>
+                    <th style="width: 80%;">Name</th>
+                    <th ></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of departments.notHave | unisearchfilter : notHaveSearch">
+                    <td>{{item.id}}</td>
+                    <td>{{item.name}}</td>
+                    <td>
+                      <button (click)="AddDep(item)" class="btn btn-success">&#x2714;</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        <div class="alert alert-success" *ngIf="succesed">
+          Güncelleme başarılı
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

@@ -1,0 +1,187 @@
+<ngx-loading [show]="loading"></ngx-loading>
+<main class="my-4">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 my-2">
+        <p class="departments my-3">
+          <span>
+            <h1 class="uniName">
+                <button id="deparmentbutton" class="navbar-toggler mt-3" type="button" data-toggle="collapse" data-target="#collapseCat">
+                  <i class="fas fa-sliders-h"></i>
+                </button>
+              <span class="uniName">
+                Kategoriler
+              </span>
+              </h1>
+          </span>
+        </p>
+        <ul class="list-group" id="collapseCat">
+          <li class="list-group-item deps" *ngFor="let item of categories">
+            <a
+              class="departmentLink"
+              [routerLink]="['/kategori-postlari', item.nameUrl]"
+              routerLinkActive="router-link-active"
+            >
+              {{ item.name }}
+            </a>
+          </li>
+        </ul>
+        <hr>
+      </div>
+      <div class="col-md-8 my-4">
+        <h1 class="uniName">{{catName}}</h1>
+        <hr>
+        <div class="row">
+          <div class="col">
+            <form #form="ngForm"  (ngSubmit)="publishPost(title)">
+              <div class="form-group">
+                <input type="text" maxlength="100" placeholder="Gönderi başlığını buraya giriniz.." #title="ngModel" required [(ngModel)]="model.title" name="title" class="form-control" id="title" />
+                <div class="text-danger m-1" *ngIf="title.invalid && title.touched">
+                  <p *ngIf="title.errors.required">Gönderi Başlığı alanı girilmesi gereklidir</p>
+                  <p *ngIf="title.errors.maxlength">Gönderi Başlığı alanına en fazla 100 karakter girilebilir</p>
+                </div>
+              </div>
+              <div class="form-group">
+                <angular-editor  placeholder="Gönderi içeriğini buraya giriniz.." class="control" required #content="ngModel" [(ngModel)]="model.content" name="content"  [config]="editorConfig"></angular-editor>
+              </div>
+              <div class="form-group">
+                <img [src]="item" *ngFor="let item of ImageUrls" class="img-fluid mx-1" style="width: 80px;"  alt="">
+                <input type="file" multiple class="my-3 ml-3" accept="image/*" name="files" (change)="selectImage($event.target.files)">
+              </div>
+              <div class="form-group">
+                <span class="d-flex justify-content-end">
+                  <button [disabled]="form.invalid"  class="btn btn-primary">Paylaş</button>
+                </span>
+                <hr>
+              </div>
+            </form>
+            <div class="row">
+              <div class="col">
+                <div class="alert alert-warning" *ngIf="catposts.length == 0">
+                  Henüz hiç gönderi paylaşılmadı. İlk paylaşan sen ol...
+                </div>
+                <ul class="list-group ">
+                  <li class="list-group-item bg-light my-2" style="border: 1px solid rgba(0,0,0,.125);" *ngFor="let post of catposts">
+                    <div class="media my-2">
+                      <img [src] ="post.imageUrl" alt="İmage" class="mr-2 postImage">
+                      <div class="media-body">
+                        <p>
+                          <span class="h4 postTitle" style="word-wrap: break-word; ">
+                           {{post.title}}
+                          </span>
+                          <span class="float-right">
+                            <ng-template #popContent> <button (click)="sikayet(post.id)" class="btn btn-danger">Şikayet Et</button></ng-template>
+                            <button style="border: none;" type="button" class="btn text-right texts" [ngbPopover]="popContent">
+                              &#65049;
+                            </button>
+                          </span>
+                        </p>
+                        <p>
+                          <span class="text-muted mr-1">
+                            <a class="mr-1 texts" style="color: black;" [routerLink]="['/profil',post.userId]" routerLinkActive="router-link-active" >{{post.userName}}</a>
+                          </span>
+                          <span>
+                            <img [src]="post.rozetUrl" width="24px" alt="">
+                          </span>
+                          <span class="text-muted float-right texts">{{post.publishDate | date}}</span>
+                        </p>
+                        <span style="word-wrap: break-word;" class="postContent" [innerHTML]="post.content"></span>
+                        <hr>
+                        <p>
+                        <span>
+                          <button *ngIf="!post.alreadyLiked" (click)="likePost(post,post.id)" class="texts bg-light" style=" border: none;" >
+                            🤍
+                          </button>
+                          <button *ngIf="post.alreadyLiked" (click)="likePost(post,post.id)" class="texts bg-light text-danger" style=" border: none;">
+                            &#10084;
+                          </button>
+                          <span class="ml-1 texts">{{post.likeCount}}</span>
+                        </span>
+                        <span>
+                          <a [routerLink]="['/kategori-postlari',catNameUrl,post.id]" class=" texts btn btn-primary float-right">Detaya Git</a>
+                        </span>
+                        </p>
+                        <div class="badge badge-info" *ngIf="post.hasImage">Bu gönderi resimli bir gönderidir</div>
+                        <div class="row ">
+                          <div class="col">
+                            <ul class="list-group " *ngFor="let comment of post.catComments; let i = index">
+                              <div *ngIf="comment.isVisible  && i < post.shownComment">
+                                <li class="list-group-item my-2" >
+                                  <div class="media">
+                                    <div>
+                                      <img [src]="comment.imageUrl"  alt="İmage" class="mr-2 commentImage">
+                                      <p *ngIf="comment.isFavorite" class="text-center mt-2 texts" style="font-size: 45px;color: green;">
+                                        &#10003;
+                                      </p>
+                                    </div>
+                                    <div class="media-body">
+                                      <p>
+                                        <span style="font-weight: bolder;">
+                                          <a class="mr-1 texts" style="color: black;" [routerLink]="['/profil',comment.userId]" routerLinkActive="router-link-active" >{{comment.userName}}</a>
+                                        </span>
+                                        <span>
+                                          <img [src]="comment.rozetUrl" width="24px" alt="">
+                                        </span>
+                                        <span class="float-right">
+                                          <ng-template #popContent> <button (click)="sikayetComment(comment.id)" class="btn btn-danger">Şikayet Et</button></ng-template>
+                                          <button style="border: none;" type="button" class="texts btn text-right" [ngbPopover]="popContent">
+                                            &#65049;
+                                          </button>
+                                        </span>
+                                      </p>
+                                      <span style="word-wrap: break-word;" class="texts">{{comment.commentContent}}</span>
+                                      <hr>
+                                      <p>
+                                        <span >
+                                          <button (click)="likeComment(comment,comment.id)"  class="texts bg-light" style="border: none;" *ngIf="!comment.alreadyLiked">
+                                            🤍
+                                          </button>
+                                          <button (click)="likeComment(comment,comment.id)" class="texts bg-light text-danger" style="border: none;" *ngIf="comment.alreadyLiked">
+                                            &#10084;
+                                          </button>
+                                          <span class="ml-1 texts">{{comment.likeCount}}</span>
+                                        </span>
+                                        <span class="float-right texts">{{comment.commentDate | date}}</span>
+                                      </p>
+                                    </div>
+                                  </div>
+                                </li>
+                              </div>
+                            </ul>
+                            <div *ngIf="post.catComments.length > 3">
+                              <span class="text-primary btn" (click)="ShowOthers(post)">{{post.showCount}} {{post.showMessage}}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        <form #form2="ngForm"  (ngSubmit)="CreateComment(post, post.id, commentContent)">
+                          <div class="form-row">
+                            <div class="form-group col-sm-9 mt-1">
+                              <input type="text" maxlength="200" placeholder="Yorum yap" #commentContent required name="commentContent" class="form-control" id="commentContent" />
+                            </div>
+                            <div class="form-group col-sm-3 mt-1">
+                              <button  class="btn btn-primary btn-block">Paylaş</button>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="btn-toolbar d-flex justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
+          <div class="btn-group mr-2" role="group" aria-label="First group">
+            <a (click)="refresPage(i+1)" [routerLink]="['/kategori-postlari',catNameUrl]"[queryParams]="{page: i+1}" routerLinkActive="router-link-active"  *ngFor="let item of pageInfo.totalPages;index as i" type="button" class="btn btn-secondary">{{i+1}}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

@@ -1,0 +1,8 @@
+.template{
+  width: 900px;
+}
+@media screen and (max-width: 900px) {
+  .template {
+    width: 100%;
+  }
+}

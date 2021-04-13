@@ -1,0 +1,42 @@
+<div class="container template my-4" id="contact">
+  <div class="row" >
+    <div class="col-sm-12 bg-light">
+      <p class="mt-3 text-primary text-center">
+        Arz, talep, öneri ve şikayetleriniz için aşağıdaki formu doldurabilirsiniz..
+      </p>
+        <form class="form my-2" class=" px-3 " #form="ngForm" (ngSubmit)="SubmitForm()">
+          <h1 class="text-center text-primary">
+            Bize Ulaşın
+          </h1>
+          <div class="form-row">
+            <div class="form-group col-sm-6">
+              <label for="name">İsim</label>
+              <input type="text" [(ngModel)]="model.name" required name="name" #name="ngModel" class="form-control" id="name" />
+              <div class="text-danger m-1" *ngIf="name.invalid && name.touched">
+                <p *ngIf="name.errors.required">İsim alanı girilmesi gereklidir</p>
+              </div>
+            </div>
+            <div class="form-group col-sm-6">
+              <label for="title">Başlık</label>
+              <input type="text" required #title="ngModel" [(ngModel)]="model.title" name="title" class="form-control" id="title" />
+              <div class="text-danger m-1" *ngIf="title.invalid && title.touched">
+                <p *ngIf="title.errors.required">Başlık alanı girilmesi gereklidir</p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="content">İçerik</label>
+            <textarea cols="30" id="content" d required rows="5" #content="ngModel" [(ngModel)]="model.content" name="content" class="form-control"></textarea>
+            <div class="text-danger m-1" *ngIf="content.invalid && content.touched">
+              <p *ngIf="content.errors.required">İçerik alanı girilmesi gereklidir</p>
+            </div>
+          </div>
+          <div class="form-group text-center">
+            <button type="submit" [disabled]="form.invalid || name.value == ' '|| title.value == ' '|| content.value == ' ' " class="btn btn-primary">
+              Gönder
+            </button>
+          </div>
+        </form>
+    </div>
+  </div>
+</div>

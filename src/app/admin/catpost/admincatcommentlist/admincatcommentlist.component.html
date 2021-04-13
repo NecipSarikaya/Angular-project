@@ -1,0 +1,41 @@
+<main class="my-4">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <h1>Kategori Post Yorumları Listesi</h1>
+        <table class="table table-bordered table-sm hover" datatable [dtOptions]="dtOptions">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Post Id</th>
+              <th>Paylaşan</th>
+              <th>İçerik</th>
+              <th>Görünür</th>
+              <th style="width: 10%;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let comment of data;let i = index" [class]="comment.isReported?'bg-danger':''">
+              <td>{{comment.id}}</td>
+              <td>{{comment.catPostId}}</td>
+              <td>{{comment.userName}}</td>
+              <td style="word-break: break-all;" >{{comment.commentContent}}</td>
+              <td>
+                <p *ngIf="comment.isVisible" class="badge badge-success">
+                    Görünür
+                </p>
+                <p *ngIf="!comment.isVisible" class="badge badge-warning">
+                  Görünür Değil
+              </p>
+              </td>
+              <td>
+                <button (click)="MakeInvisible(comment)" class="btn btn-sm btn-danger m-1">Sil</button>
+                <button (click)="ManageReport(comment)" class="btn btn-sm btn-warning m-1">Rapor</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>

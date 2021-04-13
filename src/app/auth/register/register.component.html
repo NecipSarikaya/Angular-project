@@ -1,0 +1,137 @@
+<ngx-loading [show]="loading"></ngx-loading>
+<main>
+  <div class="container template my-5">
+    <div class="row">
+      <div class="col-sm-12 bg-light p-3 " *ngIf="!isRegistered">
+        <h1 class="text-primary text-center mb-2">Kayıt Ol</h1>
+        <div style="word-break: break-all;" *ngIf="errorMessage" class="alert alert-danger">
+          {{errorMessage}}
+        </div>
+        <form #form2 ="ngForm">
+          <div class="form-row">
+            <div class="form-group">
+              <img [src]="ImageUrl ? ImageUrl : 'assets/img/profil.png'" name="file" class="img-fluid" style="width: 80px;"  alt="">
+              <input type="file" class="my-3 ml-3" accept="image/*"  name="file" (change)="selectImage($event.target.files)">
+            </div>
+          </div>
+        </form>
+        <form class="my-2 " #form="ngForm" (ngSubmit)="register()">
+          <div class="form-row">
+            <div class="form-group col-sm-6">
+              <label for="name">Ad</label>
+              <input type="text" required minlength="3" maxlength="35" #name="ngModel" [(ngModel)]="model.name" name="name" class="form-control" id="name" />
+              <div class="text-danger m-1" *ngIf="name.invalid && name.touched">
+                <p *ngIf="name.errors.required">Ad alanı girilmesi gereklidir</p>
+                <p *ngIf="name.errors.maxlength">Ad alanına en fazla 25 karakter girilebilir</p>
+                <p *ngIf="name.errors.minlength">Ad alanına en az 3 karakter girilebilir</p>
+              </div>
+            </div>
+            <div class="form-group col-sm-6">
+              <label for="lastname">Soyad</label>
+              <input type="text" required minlength="2" maxlength="35" #lastname="ngModel" [(ngModel)]="model.lastname" name="lastname"  class="form-control" id="lastname" />
+              <div class="text-danger m-1" *ngIf="lastname.invalid && lastname.touched">
+                <p *ngIf="lastname.errors.required">Soyad alanı girilmesi gereklidir</p>
+                <p *ngIf="lastname.errors.maxlength">Soyad alanına en fazla 25 karakter girilebilir</p>
+                <p *ngIf="lastname.errors.minlength">Soyad alanına en az 2 karakter girilebilir</p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" required email #email="ngModel" minlength="11" maxlength="40" [(ngModel)]="model.email" name="email" class="form-control" id="email" />
+            <div class="text-danger m-1" *ngIf="email.invalid && email.touched">
+              <p *ngIf="email.errors.required">Email alanı girilmesi gereklidir</p>
+              <p *ngIf="email.errors.email">Girdiğiniz mail formata uymamaktadir</p>
+              <p *ngIf="email.errors.minlength">Mail alanı en az 11 karakterden oluşmaktadır</p>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-sm-6">
+              <label for="username">Kullanıcı Adı</label>
+              <input type="text" required minlength="6" maxlength="35" #username="ngModel" [(ngModel)]="model.username" name="username"  class="form-control" id="username" />
+              <div class="text-danger m-1" *ngIf="username.invalid && username.touched">
+                <p *ngIf="username.errors.required">Kullanıcı Adı alanı girilmesi gereklidir</p>
+                <p *ngIf="username.errors.minlength">Kullanıcı Adı alanına en az 6 karakter girilebilir</p>
+                <p *ngIf="username.errors.maxlength">Kullanıcı Adı alanına en fazla 25 karakter girilebilir</p>
+              </div>
+            </div>
+            <div class="form-group col-sm-6">
+              <label for="gender">Cinsiyet</label>
+              <select  [(ngModel)]="model.gender" required #gender="ngModel" name="gender"  class="form-control">
+                <option value="" selected disabled>Cinsiyet Seçiniz</option>
+                <option value="male">Erkek</option>
+                <option value="female">Kadın</option>
+              </select>
+              <div class="text-danger m-1" *ngIf="gender.invalid && gender.touched">
+                <p *ngIf="gender.errors.required">Cinsiyet alanı girilmesi gereklidir</p>
+              </div>
+            </div>
+          </div>
+            <div class="form-group">
+              <label for="universityId">Üniversite</label>
+              <ng-multiselect-dropdown
+                required
+                #university = "ngModel"
+                [placeholder]="'Lütfen Üniversitenizi Seçiniz'"
+                [data]="InitialData.universities"
+                name="universityId"
+                [(ngModel)]="selectedItems"
+                [settings]="dropdownSettings"
+                (onSelect)="onItemSelect($event)"
+              >
+              </ng-multiselect-dropdown>
+              <div style="color: white;" class="text-muted my-1"><small>&#8226;Türkçe karakter ile başlayan bir üniversite aratacaksanız büyük harfle başlayınız</small></div>
+              <div class="text-danger m-1" *ngIf="university.touched">
+                <p *ngIf="university.value === 0">Universite alanı girilmesi gereklidir</p>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="departmentId">Bölüm</label>
+              <ng-multiselect-dropdown
+                required
+                #department = "ngModel"
+                [placeholder]="'Lütfen Bölümünüzü Seçiniz'"
+                [data]="InitialData.departments"
+                name="departmentId"
+                [(ngModel)]="selectedItemsDep"
+                [settings]="dropdownSettings1"
+                (onSelect)="onItemSelectDep($event)"
+              >
+              </ng-multiselect-dropdown>
+              <div style="color: white;" class="text-muted my-1"><small>&#8226;Türkçe karakter ile başlayan bir bölüm aratacaksanız büyük harfle başlayınız</small></div>
+              <div class="text-danger m-1" *ngIf="department.touched">
+                <p *ngIf="department.value === 0">Bölüm alanı girilmesi gereklidir</p>
+              </div>
+            </div>
+          <div class="form-row">
+            <div class="form-group col-sm-6">
+              <label   for="password">Şifre</label>
+              <input [(ngModel)]="model.password" required #password="ngModel" minlength="6" maxlength="25" name="password" type="password" class="form-control" id="password" />
+              <div class="text-danger m-1" *ngIf="password.invalid && password.touched">
+                <p *ngIf="password.errors.required">Şifre alanı girilmesi gereklidir</p>
+                <p *ngIf="password.errors.minlength">Şifre alanına en az 6 karakter girilebilir</p>
+                <p *ngIf="password.errors.maxlength">Şifre alanına en fazla 25 karakter girilebilir</p>
+              </div>
+            </div>
+            <div class="form-group col-sm-6">
+              <label for="repassword">Şifre Tekrar</label>
+              <input type="password" required [(ngModel)]="controlPass" name="repassword" class="form-control" #repassword="ngModel" id="repassword" />
+              <div class="text-danger m-1" *ngIf="repassword.invalid && repassword.touched">
+                <p *ngIf="repassword.errors.required">Şifre Tekrar alanı girilmesi gereklidir</p>
+              </div>
+              <div class="text-danger m-1" *ngIf="repassword.valid && repassword.touched">
+                <p *ngIf="repassword.value != password.value">Şifreler uyuşmuyor</p>
+              </div>
+            </div>
+          </div>
+          <button [disabled]="form.invalid || form2.invalid || password.value != repassword.value" type="submit" class="btn btn-primary btn-block">Kayıt Ol</button>
+        </form>
+      </div>
+      <div class="col-sm-12 bg-light p-3" *ngIf="isRegistered">
+        <div class="alert alert-warning">
+          Mail hesabınıza gönderilen aktivasyon linkine tıklayarak hesabınızı onaylabilir ve siteye giriş yapabilirsiniz.
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

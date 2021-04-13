@@ -1,0 +1,29 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 col-lg-3 col-sm-6 my-2" *ngFor="let item of categories">
+      <div class="card">
+        <div class="card-body" style="margin: 0px; padding: 0px">
+          <div class="image">
+            <img
+              [src]="item.imageUrl"
+              alt="Resim"
+              class="image_img"
+            />
+            <div class="image_overlay image_overlay_blur">
+              <div class="image_title">{{item.name}}</div>
+              <div class="image_description text-center mt-2">
+                {{item.description}}
+              </div>
+              <a
+                [routerLink]="['/kategori-postlari',item.nameUrl]"
+                routerLinkActive="router-link-active"
+                class="btn imgbtn btn-sm btn-primary my-2"
+                >Sayfayı ziyaret et</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

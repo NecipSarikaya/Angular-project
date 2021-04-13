@@ -1,0 +1,44 @@
+<main class="my-4">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <h1>Bölüm Listesi</h1>
+        <div>
+          <button (click)="ShowAdd()" class="btn btn-success my-3">Yeni Ekle</button>
+        </div>
+        <table class="table table-bordered table-sm hover" datatable [dtOptions]="dtOptions">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>NameUrl</th>
+              <th style="width: 30%;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let dep of data;let i = index">
+              <td>{{dep.id}}</td>
+              <td>{{dep.name}}</td>
+              <td>{{dep.nameUrl}}</td>
+              <td>
+                <button (click)="GetDetail(dep)" class="btn btn-sm btn-primary mr-1">Detay</button>
+                <button (click)="deleteDep(dep.id,i)" class="btn btn-sm btn-danger">Sil</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <hr>
+    <div class="row" *ngIf="add">
+      <div class="col">
+        <department-create  (newItemEvent)="addItem($event)"></department-create>
+      </div>
+    </div>
+    <div class="row" *ngIf="detail">
+      <div class="col">
+        <department-detail [department]="detailedDep" (newItemEvent)="getItem($event)"></department-detail>
+      </div>
+    </div>
+  </div>
+</main>

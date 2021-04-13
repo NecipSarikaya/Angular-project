@@ -1,0 +1,39 @@
+<main class="my-4">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <h1>Üniversite Listesi</h1>
+        <div>
+          <button (click)="ShowAdd()" class="btn btn-success my-3">Yeni Ekle</button>
+        </div>
+        <table class="table table-bordered table-sm hover" datatable [dtOptions]="dtOptions">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>NameUrl</th>
+              <th style="width: 30%;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let uni of data;let i = index">
+              <td>{{uni.id}}</td>
+              <td>{{uni.name}}</td>
+              <td>{{uni.nameUrl}}</td>
+              <td>
+                <a [routerLink]="['/admin','universite',uni.nameUrl]" routerLinkActive="router-link-active"   class="btn btn-sm btn-primary mr-1">Detay</a>
+                <button (click)="deleteUni(uni.id,i)" class="btn btn-sm btn-danger">Sil</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <hr>
+    <div class="row" *ngIf="add">
+      <div class="col">
+        <university-create (newItemEvent)="addItem($event)"></university-create>
+      </div>
+    </div>
+  </div>
+</main>

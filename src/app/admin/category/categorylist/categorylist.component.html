@@ -1,0 +1,48 @@
+<main class="my-4">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <h1>Kategori Listesi</h1>
+        <div>
+          <button (click)="ShowAdd()" class="btn btn-success my-3">Yeni Ekle</button>
+        </div>
+        <table class="table table-bordered table-sm hover" datatable [dtOptions]="dtOptions">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>NameUrl</th>
+              <th>Açıklama</th>
+              <th>Resim Url</th>
+              <th style="width: 30%;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let cat of data;let i = index">
+              <td>{{cat.id}}</td>
+              <td>{{cat.name}}</td>
+              <td>{{cat.nameUrl}}</td>
+              <td style="word-break: break-all;">{{cat.description}}</td>
+              <td>{{cat.imageUrl}}</td>
+              <td>
+                <button (click)="GetDetail(cat)" class="btn btn-sm btn-primary mr-1">Detay</button>
+                <button (click)="deleteCat(cat.id,i)" class="btn btn-sm btn-danger">Sil</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <hr>
+    <div class="row" *ngIf="add">
+      <div class="col">
+        <categorycreate  (newItemEvent)="addItem($event)"></categorycreate>
+      </div>
+    </div>
+    <div class="row" *ngIf="detail">
+      <div class="col">
+        <category-detail [category]="detailedCat" (newItemEvent)="getItem($event)"></category-detail>
+      </div>
+    </div>
+  </div>
+</main>

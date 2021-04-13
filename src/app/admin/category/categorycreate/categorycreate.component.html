@@ -1,0 +1,43 @@
+<main class="my-4">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <form #form="ngForm" (ngSubmit)="createCat()" class=" p-3 bg-light">
+          <h1 class="text-center text-primary">Kategori Oluştur</h1>
+          <div class="form-group">
+            <label for="name">Kategori Adı</label>
+            <input type="text" required #name="ngModel" [(ngModel)]="category.name" name="name" class="form-control" id="name" />
+            <div class="text-danger m-1" *ngIf="name.invalid && name.touched">
+              <p *ngIf="name.errors.required">Kategori Adı alanı girilmesi gereklidir</p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="nameUrl">Kategori Url</label>
+            <input [(ngModel)]="category.nameUrl" required #nameUrl="ngModel" name="nameUrl" type="text" class="form-control" id="nameUrl" />
+            <div class="text-danger m-1" *ngIf="nameUrl.invalid && nameUrl.touched">
+              <p *ngIf="nameUrl.errors.required">Kategori Url alanı girilmesi gereklidir</p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="nameUrl">Açıklama</label>
+            <input [(ngModel)]="category.description" required #description="ngModel" name="description" type="text" class="form-control" id="description" />
+            <div class="text-danger m-1" *ngIf="description.invalid && description.touched">
+              <p *ngIf="description.errors.required">Açıklama alanı girilmesi gereklidir</p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="imageUrl">Resim Url</label>
+            <input [(ngModel)]="category.imageUrl" required #imageUrl="ngModel" name="imageUrl" type="text" class="form-control" id="imageUrl" />
+            <div class="text-danger m-1" *ngIf="imageUrl.invalid && imageUrl.touched">
+              <p *ngIf="imageUrl.errors.required">Resim Url alanı girilmesi gereklidir</p>
+            </div>
+          </div>
+          <button [disabled]="form.invalid" class="btn btn-primary btn-block">Oluştur</button>
+        </form>
+        <div class="alert alert-success" *ngIf="succesed">
+          Olutşruma başarılı
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

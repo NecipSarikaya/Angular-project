@@ -1,0 +1,16 @@
+.form-control.ng-touched.ng-invalid{
+  border: 1px solid red;
+}
+.form-control.ng-dirty.ng-valid{
+  border: 1px solid green;
+}
+.control.ng-touched.ng-invalid{
+  border: 1px solid red;
+}
+.control.ng-dirty.ng-valid{
+  border: 1px solid green;
+}
+.backColor{
+  background-color: #003049;
+  /* 003049 */
+}

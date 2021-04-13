@@ -1,0 +1,55 @@
+<main>
+  <div class="container my-5 template">
+    <div class="row">
+      <div class="col-sm-12">
+        <form #form="ngForm" (ngSubmit)="login()" class=" p-3 bg-light">
+          <h1 class="text-center text-primary">Giriş Yap</h1>
+          <div *ngIf="errorMessage != null" class="alert alert-danger p-2">
+            {{errorMessage}}
+          </div>
+          <div class="form-group">
+            <label for="email">Kullanıcı Adı veya Email</label>
+            <input type="email" required #email="ngModel" minlength="6" maxlength="40" [(ngModel)]="model.email" name="email" class="form-control" id="email" />
+            <div class="text-danger m-1" *ngIf="email.invalid && email.touched">
+              <p *ngIf="email.errors.required">Kullanıcı Adı veya Email alanı girilmesi gereklidir</p>
+              <p *ngIf="email.errors.minlength">Kullanıcı Adı veya Email alanına en az  6 karakter girilebilir</p>
+              <p *ngIf="email.errors.maxlength">Kullanıcı Adı veya Email alanına en fazla  40 karakter girilebilir</p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="password">Şifre</label>
+            <input [(ngModel)]="model.password" required #password="ngModel" minlength="6" maxlength="25" name="password" type="password" class="form-control" id="password" />
+            <div class="text-danger m-1" *ngIf="password.invalid && password.touched">
+              <p *ngIf="password.errors.required">Şifre alanı girilmesi gereklidir</p>
+              <p *ngIf="password.errors.minlength">Şifre alanına en az 6 karakter girilebilir</p>
+              <p *ngIf="password.errors.maxlength">Şifre alanına en fazla 25 karakter girilebilir</p>
+            </div>
+          </div>
+          <div class="form-group">
+            <button (click)="ResetPassword()" type="button"  style="border: none;" class="btn m-0 p-0 text-primary">Şifrenizi mi unuttunuz</button>
+          </div>
+          <div class="form-group">
+            <a [routerLink]="['/kayit-ol']" style="cursor: pointer;"  class="btn m-0 p-0 text-primary">Yeni hesap oluşturmak için Tıklayınız</a>
+          </div>
+          <button [disabled]="form.invalid" class="btn btn-primary btn-block">Giriş Yap</button>
+        </form>
+      </div>
+    </div>
+    <div class="row my-4 bg-light p-3" *ngIf="reset">
+      <div class="col">
+        <h4>Lütfen <b>şifresini yenilemek</b>  istediğiniz mail adresini girin</h4>
+        <form #form2="ngForm" action="" (ngSubmit)="sendEmail()">
+          <div class="form-group">
+            <input placeholder="Mail adresini giriniz.." required #resetEmail="ngModel" name="resetEmail" type="text" class="form-control" [(ngModel)]="resetModel.resetEmail">
+            <div class="text-danger m-1" *ngIf="resetEmail.invalid && resetEmail.touched">
+              <p *ngIf="resetEmail.errors.required">Email alanı girilmesi gereklidir</p>
+            </div>
+          </div>
+          <div class="form-group">
+            <button [disabled]="form2.invalid" class="btn btn-primary">Gönder</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>

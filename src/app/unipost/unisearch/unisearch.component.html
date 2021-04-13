@@ -1,0 +1,48 @@
+<main>
+
+  <div class="container mt-5 mb-3">
+    <div class="row">
+      <div class="col-md-12 p-5 backColor">
+        <h1 class="my-3 " style="color: white;">Üniversitenizi Girin</h1>
+        <form (ngSubmit)="Search()" #form="ngForm">
+          <div class="form-row">
+            <div class="form-group col-lg-10 col-md-9 col-sm-9">
+              <ng-multiselect-dropdown
+                [placeholder]="'Lütfen Üniversitenizi Seçiniz'"
+                [data]="universities"
+                name="university"
+                [(ngModel)]="selectedItems"
+                [settings]="dropdownSettings"
+                (onSelect)="onItemSelect($event)"
+              >
+              </ng-multiselect-dropdown>
+              <div style="color: white;" class="text-muted my-1"><small>&#8226;Türkçe karakter ile başlayan bir üniversite aratacaksanız büyük harfle başlayınız</small></div>
+            </div>
+            <div class="form-group col-lg-2 col-md-3 col-sm-3">
+              <button [disabled]="isSelected()" class="btn btn-sn btn-primary btn-block">Tıkla</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="row mt-2">
+      <div class="col">
+        <div class="card">
+          <div class="card-header backColor" style="background-color: #003049;">
+            <h5 class="card-title">
+              <img src="../../../assets/img/icon.ico" width="32px" alt="Yaşlı tilki websitesi logosu">
+              <span style="color: white;">
+                Yaşlı Tilki sitesine hoşgeldiniz
+              </span>
+            </h5>
+          </div>
+          <div class="card-body">
+            <p class="bg-light p-2">
+              Lütfen sitemizde gezindikten sonra <b>İletişim</b> kısmında bulunan <b>Google Formu</b> doldurarak sitemizi geliştirmemize yardımcı olun
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

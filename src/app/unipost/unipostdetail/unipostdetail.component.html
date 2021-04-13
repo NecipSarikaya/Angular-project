@@ -1,0 +1,107 @@
+<ngx-loading [show]="loading"></ngx-loading>
+<main class="my-4">
+  <div class="container bg-light">
+    <div class="row">
+      <div class="col">
+        <div class="alert alert-success my-2" *ngIf="post.isOwner">
+          <span id="alertMessage">Bu kısımda sana en yararlı olan yorumu seçebilirsin. Seçim yaparak sana yardımcı olan kişiye statü kazandıracak bir puan kazandırmış olacaksın. <b>Unutma yalnızca 1 defa seçim yapabilirsin</b></span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="media py-3">
+          <img [src]="post.imageUrl"  alt="İmage" class="mr-2 postImage">
+          <div class="media-body">
+            <p class="h4" style="word-wrap: break-word;" id="title">{{post.title}}</p>
+            <p class="my-3">
+              <span class="text-muted mr-1 texts">{{post.userName}}</span>
+              <span>
+                <img [src]="post.rozetUrl" width="24px" alt="">
+              </span>
+              <span class="text-muted float-right texts">{{post.publishDate | date}}</span>
+            </p>
+            <span style="font-weight: 600; word-wrap: break-word;" class="postContent" [innerHTML]="post.content"></span>
+            <hr>
+            <p>
+            <span>
+              <button (click)="likePost()" class="bg-light" style=" border: none;" *ngIf="!post.alreadyLiked">
+                <i class="far fa-heart"></i>
+              </button>
+              <button  (click)="likePost()" class="bg-light" style=" border: none;" *ngIf="post.alreadyLiked">
+                <i class="fas fa-heart text-danger"></i>
+              </button>
+              <span class="ml-1">{{post.likeCount}}</span>
+            </span>
+            </p>
+            <div *ngIf="post.hasImage">
+              <a class="btn my-2 p-0 text-primary"  data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Resimleri görmek için tıklayınız
+              </a>
+              <div class="collapse multi-collapse" id="multiCollapseExample1">
+                <ngx-gallery [options]="galleryOptions" [images]="galleryImages"></ngx-gallery>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <ul class="list-group">
+                  <div class="div" *ngFor="let comment of post.uniComments">
+                    <li class="list-group-item my-2" *ngIf="comment.isVisible">
+                      <div class="media">
+                        <div>
+                          <img [src]="comment.imageUrl" alt="İmage" class="mr-2 commentImage">
+                          <p *ngIf="comment.isFavorite" class="text-center mt-2" style="font-size: 45px;color: green;">
+                            &#10003;
+                          </p>
+                        </div>
+                        <div class="media-body">
+                          <p style="font-weight: bolder;">
+                            <span class="texts">{{comment.userName}}</span>
+                            <span>
+                              <img [src]="comment.rozetUrl" width="24px" alt="">
+                            </span>
+                            <span class="float-right" *ngIf="post.isOwner && post.userId != comment.userId">
+                              <button *ngIf="!comment.isFavorite" [disabled]="post.isFavoriSelected" (click)="SetAsFavorite(comment,comment.id)" class="btn btn-danger">Favori</button>
+                              <button *ngIf="comment.isFavorite" [disabled]="post.isFavoriSelected" (click)="SetAsFavorite(comment,comment.id)" class="btn btn-success">Favori</button>
+                            </span>
+                          </p>
+                          <span style="font-weight: 600;word-wrap: break-word;" class="texts" >{{comment.commentContent}}</span>
+                          <hr>
+                          <p>
+                            <span style="font-size: 17px;">
+                              <button (click)="likeComment(comment,comment.id)" class="bg-light" style=" border: none;" *ngIf="!comment.alreadyLiked">
+                                <i class="far fa-heart"></i>
+                              </button>
+                              <button (click)="likeComment(comment,comment.id)" class="bg-light" style=" border: none;" *ngIf="comment.alreadyLiked">
+                                <i class="fas fa-heart text-danger"></i>
+                              </button>
+                              <span class="ml-1 texts">{{comment.likeCount}}</span>
+                            </span>
+                            <span class="float-right texts">{{comment.commentDate | date}}</span>
+                          </p>
+                        </div>
+                      </div>
+                    </li>
+                  </div>
+                </ul>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <form #form2="ngForm"  (ngSubmit)="CreateComment(commentContent)">
+                  <div class="form-row">
+                    <div class="form-group col-sm-9 mt-1">
+                      <input type="text" maxlength="200" placeholder="Yorum yap" #commentContent required name="commentContent" class="form-control" id="commentContent" />
+                    </div>
+                    <div class="form-group col-sm-3 mt-1">
+                      <button  class="btn btn-primary btn-block">Paylaş</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

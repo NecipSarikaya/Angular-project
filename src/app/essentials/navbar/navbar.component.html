@@ -1,0 +1,147 @@
+<nav
+  class="navbar navbar-expand-sm backColor border-bottom"
+>
+  <a
+    [routerLink]="['/']"
+    routerLinkActive="router-link-active"
+    class="navbar-brand mx-4 my-2"
+  >
+  <img src="assets/img/icon.png" width="32px" alt="">
+  <span class="text-primary">Yaşlı Tilki</span>
+  </a>
+  <button
+    class="navbar-toggler whiteText"
+    type="button"
+    data-toggle="collapse"
+    data-target="#collapseNav"
+  >
+    <i class="fas fa-sliders-h whiteText"></i>
+  </button>
+  <div class="collapse navbar-collapse" id="collapseNav">
+
+    <ul class="navbar-nav ml-auto text-center" *ngIf="loggedIn() && IsAdmin()">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle whiteText" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Admin Üniversite
+        </a>
+        <div class="dropdown-menu text-center" style="background-color: #003049;" aria-labelledby="navbarDropdown">
+          <a  [routerLink]="['/admin','universite']"
+            routerLinkActive="router-link-active"
+            class="nav-link whiteText dropdown-item">Admin Universite</a>
+          <a  [routerLink]="['/admin','departman']"
+            routerLinkActive="router-link-active"
+            class="nav-link whiteText dropdown-item">Admin Bölüm</a>
+          <a  [routerLink]="['/admin','universite-postlari']"
+            routerLinkActive="router-link-active"
+            class="nav-link whiteText dropdown-item">Admin Üniversite Postları</a>
+          <a  [routerLink]="['/admin','universiteyorumlari']"
+            routerLinkActive="router-link-active"
+            class="nav-link whiteText dropdown-item">Admin Üniversite Yorumları</a>
+        </div>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle whiteText" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Admin Kategori
+        </a>
+        <div class="dropdown-menu text-center" aria-labelledby="navbarDropdown" style="background-color: #003049;">
+          <a  [routerLink]="['/admin','kategori']"
+            routerLinkActive="router-link-active"
+            class="nav-link whiteText dropdown-item">Admin Kategori</a>
+          <a  [routerLink]="['/admin','kategori-postlari']"
+            routerLinkActive="router-link-active"
+            class="nav-link whiteText dropdown-item">Admin Kategori Postları</a>
+          <a  [routerLink]="['/admin','kategoriyorumlari']"
+            routerLinkActive="router-link-active"
+            class="nav-link whiteText dropdown-item">Admin Kategori Yorumları</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a  [routerLink]="['/admin','kullanicilar']"
+            routerLinkActive="router-link-active"
+            class="nav-link whiteText">Admin Kullanıcılar</a>
+      </li>
+    </ul>
+
+    <ul class="navbar-nav ml-auto text-center" *ngIf="loggedIn()">
+      <li class="nav-item">
+        <a
+          [routerLink]="['/kategori-postlari','yazilim']"
+          routerLinkActive="router-link-active"
+          class="nav-link whiteText"
+          >Kategoriler</a
+        >
+      </li>
+      <li class="nav-item">
+        <a [routerLink]="['/iletisim']" routerLinkActive="router-link-active"  class="nav-link whiteText">İletişim</a>
+      </li>
+      <li class="nav-item">
+        <a [routerLink]="['/nasil']" routerLinkActive="router-link-active"  class="nav-link whiteText">Nasıl Çalışır</a>
+      </li>
+      <li class="nav-item">
+        <a
+          [routerLink]="['/profil',_authService.decodedToken
+          ? _authService.decodedToken.nameid
+          : decodedToken.nameid]"
+          routerLinkActive="router-link-active"
+          class="nav-link whiteText"
+          >{{
+            _authService.decodedToken
+              ? _authService.decodedToken.unique_name
+              : decodedToken.unique_name
+          }}</a
+        >
+      </li>
+      <li class="nav-item">
+        <a (click)="logout()" class="nav-link whiteText"
+          >Çıkış Yap</a
+        >
+      </li>
+    </ul>
+    <ul class="navbar-nav ml-auto text-center" *ngIf="!loggedIn()">
+      <li class="nav-item">
+        <a [routerLink]="['/iletisim']" routerLinkActive="router-link-active"  class="nav-link whiteText">İletişim</a>
+      </li>
+      <li class="nav-item">
+        <a [routerLink]="['/nasil']" routerLinkActive="router-link-active"  class="nav-link whiteText">Nasıl Çalışır</a>
+      </li>
+      <li class="nav-item">
+        <a
+          [routerLink]="['/kayit-ol']"
+          routerLinkActive="router-link-active"
+          class="nav-link whiteText"
+          >Kayıt Ol</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          [routerLink]="['/giris-yap']"
+          routerLinkActive="router-link-active"
+          class="nav-link whiteText"
+          >Giriş Yap</a
+        >
+      </li>
+    </ul>
+  </div>
+</nav>
+<button type="button" data-toggle="modal" style="display: none;" id="button" data-target="#exampleModal"></button>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content ">
+      <div class="modal-header"style="background-color:#003049;">
+        <img class="mr-1" src="../../../assets/img/icon.ico" width="32px" alt="Yaşlı tilki websitesi logosu">
+        <span style="color: white;">
+          Yaşlı Tilki sitesine hoşgeldiniz
+        </span>
+        <button type="button" class="close" style="color: white;" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="bg-light p-2">
+          Lütfen sitemizde gezindikten sonra <b>İletişim</b> kısmında bulunan <b>Google Formu</b> doldurarak sitemizi geliştirmemize yardımcı olun
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

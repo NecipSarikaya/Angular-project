@@ -1,0 +1,50 @@
+<footer class="backColor" >
+  <div class="p-2 text-center text-white">
+      <div class="container">
+          <div class="row">
+              <div class="col-md-1"></div>
+              <div class="col-md-3">
+                  <p class="mt-2 text-primary" style="font-weight: bolder;">Sitemizin logosu</p>
+                  <img src="assets/img/icon.png" width="180px" alt="İmage">
+                  <hr color="white">
+              </div>
+              <div class="col-md-3">
+                  <div style="font-weight: bolder;" class="text-primary mt-2">Site içi Hızlı Linkler</div>
+                  <div class="my-1">
+                      <a [routerLink]="['/']" routerLinkActive="router-link-active"  style="color: white;" href=""><small style="font-weight: bolder;">Anasayfa</small></a>
+                  </div>
+                  <div class="my-1">
+                      <a [routerLink]="['/nasil']" routerLinkActive="router-link-active"  style="color: white;" href=""><small style="font-weight: bolder;">Sitemiz Nasıl Çalışıyor</small></a>
+                  </div>
+                  <div class="my-1" *ngIf="loggedIn()">
+                    <a [routerLink]="['/profil',decodedToken.nameid]" routerLinkActive="router-link-active"  style="color: white;" href=""><small style="font-weight: bolder;">Profil</small></a>
+                </div>
+                  <div class="my-1" *ngIf="!loggedIn()">
+                      <a [routerLink]="['/giris-yap']" routerLinkActive="router-link-active"  style="color: white;" href=""><small style="font-weight: bolder;">Giriş Yap</small></a>
+                  </div>
+                  <div class="my-1" *ngIf="!loggedIn()">
+                      <a [routerLink]="['/kayit-ol']" routerLinkActive="router-link-active"  style="color: white;" href=""><small style="font-weight: bolder;">Kayıt Ol</small></a>
+                  </div>
+                  <hr color="white">
+              </div>
+              <div class="col-md-4">
+                  <div style="font-weight: bolder;" class="mt-2 text-primary">Co-founders</div>
+                  <div  class="my-1">
+                      <small style="font-weight: bolder;">Necip Sarıkaya</small>
+                  </div>
+                  <div   class="my-1">
+                      <small style="font-weight: bolder;">nnecipsarikaya@gmail.com</small>
+                  </div>
+                  <br>
+                  <div  class="my-1">
+                    <small style="font-weight: bolder;">Harun Emre Şentürk</small>
+                </div>
+                <div   class="my-1">
+                    <small style="font-weight: bolder;">nnecipsarikaya@gmail.com</small>
+                </div>
+              </div>
+              <div class="col-md-1"></div>
+          </div>
+      </div>
+  </div>
+</footer>

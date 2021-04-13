@@ -1,0 +1,41 @@
+<main class="my-4">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <h1>Kategori Postu Listesi</h1>
+        <table class="table table-bordered table-sm hover" datatable [dtOptions]="dtOptions">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Paylaşan</th>
+              <th>Başlık</th>
+              <th>İçerik</th>
+              <th>Görünür</th>
+              <th style="width: 10%;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let post of data;let i = index" [class]="post.isReported?'bg-danger':''">
+              <td>{{post.id}}</td>
+              <td>{{post.userName}}</td>
+              <td style="word-break: break-all;">{{post.title}}</td>
+              <td style="word-break: break-all;">{{post.content}}</td>
+              <td>
+                <p *ngIf="post.isVisible" class="badge badge-success">
+                    Görünür
+                </p>
+                <p *ngIf="!post.isVisible" class="badge badge-warning">
+                  Görünür Değil
+              </p>
+              </td>
+              <td>
+                <button (click)="MakeInvisible(post)" class="btn btn-sm btn-danger m-1">Sil</button>
+                <button (click)="ManageReport(post)" class="btn btn-sm btn-warning m-1">Rapor</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>

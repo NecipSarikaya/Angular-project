@@ -1,0 +1,614 @@
+<ngx-loading [show]="loading"></ngx-loading>
+<main class="my-4 ">
+  <div class="container p-3 my-2">
+    <div class="row">
+      <div class="col">
+        <div class="media">
+          <img id="profileImage"  style="border: 1px solid rgba(0,0,0,.125);" [src]="user.imageUrl"
+            alt="İmage"
+            class="sagmargin p-1 mr-2"/>
+          <div class="media-body">
+            <div>
+              <span><b>{{user.name}} {{user.lastName}}</b></span>
+              <img [src]="user.badgeUrl" class="mr-2" width="40px" alt="Yaşlı tilki forum ve paylaşım sitesi kullanıcı rozeti resmi">
+              <p class="text-muted mb-4">
+                <span>
+                  <small>{{user.userName}}</small>
+                </span>
+                <span class="float-right mr-3" *ngIf="!user.isCurrentUser">
+                  <button *ngIf="user.isAlreadyFollowed" (click)="FollowUserFromOtherProfileIncreaseTakipci(user)"  class="btn btn-success followTextIn">
+                    Takiptesin
+                  </button>
+                  <button *ngIf="!user.isAlreadyFollowed" (click)="FollowUserFromOtherProfileIncreaseTakipci(user)"  class="btn btn-primary followTextIn">
+                    Takip Et
+                  </button>
+                </span>
+              </p>
+              <hr>
+              <p style="word-wrap: break-word;" [innerHtml]="user.about"></p>
+              <span>
+                <span class="mx-1" *ngIf="user.instagramLink != null ">
+                  <a target="blank" [href]="user.instagramLink" style="font-size: 25px;" ><i style="color: #bc2a8d;" class="fab fa-instagram"></i></a>
+                </span>
+                <span class="mx-1" *ngIf="user.twitterLink != null  ">
+                  <a target="blank" [href]="user.twitterLink" style="font-size: 25px;"><i style="color: #1DA1F2;" class="fab fa-twitter"></i></a>
+                </span>
+              </span>
+
+            </div>
+            <ul class="list-group list-group-horizontal flex-fill">
+              <li class="list-group-item flex-fill text-center followText" >
+                <b>{{postCount}}</b>
+                <p class="followTextIn mt-1">
+                  Gönderi
+                </p>
+              </li>
+              <li *ngIf="user.isCurrentUser" class="list-group-item  flex-fill text-center followText" >
+                <b>{{followingCount}}</b>
+                  <div class="modal fade" id="followers">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2 class="modal-title">Takipçi Listesi</h2>
+                                <button class="close"  type="button" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                              <div *ngIf="user.followers.length == 0" class="alert alert-warning">
+                                Henüz kimse seni takip etmemiş, haydi insanlarla iletişime geç ve popüler ol
+                              </div>
+                              <div class="form-group">
+                                <input type="text" placeholder="Ara..." [(ngModel)]="searchValue" name="searchName" class="p-2 form-control">
+                              </div>
+                              <ul class="list-group mt-2">
+                                <li class="list-group-item bg-light" *ngFor="let sub of user.followers | searchfilter:searchValue">
+                                  <div class="media text-left">
+                                    <img [src]="sub.imageUrl" width="46px" alt="İmage" class="mr-1">
+                                    <div class="media-body">
+                                      <p style="margin: 0px;padding:0px;">
+                                        <span><a data-dismiss="modal" [routerLink]="['/profil',sub.id]" routerLinkActive="router-link-active"  style="color: black;"><b>{{sub.name}} {{sub.lastName}}</b></a></span>
+                                        <button *ngIf="sub.isAlreadyFollowed" (click)="FollowUserFromFollowing(sub)"  class="btn btn-success btn-sm float-right followTextIn">
+                                          Takiptesin
+                                        </button>
+                                        <button *ngIf="!sub.isAlreadyFollowed" (click)="FollowUserFromFollowing(sub)"  class="btn btn-primary btn-sm float-right followTextIn">
+                                          Takip Et
+                                        </button>
+                                      </p>
+                                      <span>{{sub.userName}}</span>
+                                    </div>
+                                  </div>
+                                </li>
+                              </ul>
+                            </div>
+                            <hr>
+                          </div>
+                      </div>
+                  </div>
+                <p>
+                  <button class="btn followTextIn" (click)="resetSearchValue()" style="margin: 0px;padding: 0px;" data-toggle="modal" data-target="#followers">Takipçi</button>
+                </p>
+              </li>
+              <li *ngIf="!user.isCurrentUser" class="list-group-item  flex-fill text-center followText" >
+                <b>{{followingCount}}</b>
+                  <div class="modal fade" id="followers">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2 class="modal-title">Takipçi Listesi</h2>
+                                <button class="close" type="button" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                              <div *ngIf="user.followers.length == 0" class="alert alert-warning">
+                                Bu kullanıcıyı henüz kimse takip etmemiş, haydi onu takip et ve onun fikirlerini öğren
+                              </div>
+                              <div class="form-group">
+                                <input type="text" placeholder="Ara..." [(ngModel)]="searchValue" name="searchName" class="p-2 form-control">
+                              </div>
+                              <ul class="list-group">
+                                <li class="list-group-item" *ngFor="let sub of user.followers | searchfilter:searchValue">
+                                  <div class="media text-left">
+                                    <img [src]="sub.imageUrl" width="46px" alt="İmage" class="mr-1">
+                                    <div class="media-body">
+                                      <p style="margin: 0px;padding:0px;">
+                                        <span><a data-dismiss="modal" [routerLink]="['/profil',sub.id]" routerLinkActive="router-link-active"  style="color: black;"><b>{{sub.name}} {{sub.lastName}}</b></a></span>
+                                        <button *ngIf="sub.isAlreadyFollowed && !sub.isCurrentUser" (click)="FollowUser(sub)"  class="float-right btn btn-success followTextIn">
+                                          Takiptesin
+                                        </button>
+                                        <button *ngIf="!sub.isAlreadyFollowed  && !sub.isCurrentUser" (click)="FollowUser(sub)"  class="float-right btn btn-primary followTextIn">
+                                          Takip Et
+                                        </button>
+                                      </p>
+                                      <span>{{sub.userName}}</span>
+                                    </div>
+                                  </div>
+                                </li>
+                              </ul>
+                            </div>
+                            <hr>
+                          </div>
+                      </div>
+                  </div>
+                <p >
+                  <button class="btn followTextIn" (click)="resetSearchValue()" style="margin: 0px;padding: 0px;" data-toggle="modal" data-target="#followers">Takipçi</button>
+                </p>
+              </li>
+              <li *ngIf="user.isCurrentUser" class="list-group-item  flex-fill text-center followText" >
+                <b>{{followerCount}}</b>
+                  <div class="modal fade" id="followings">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2 class="modal-title">Takip</h2>
+                                <button class="close" type="button" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                              <div *ngIf="user.followings.length == 0" class="alert alert-warning">
+                                Henüz kimseyi takip etmemişsin ,haydi insanları takip et ve arkadaş edin
+                              </div>
+                              <div class="form-group">
+                                <input type="text" placeholder="Ara..." [(ngModel)]="searchValue" name="searchName" class="p-2 form-control">
+                              </div>
+                              <ul class="list-group">
+                                <li class="list-group-item" *ngFor="let sub of user.followings | searchfilter:searchValue">
+                                  <div class="media text-left">
+                                    <img [src]="sub.imageUrl" width="46px" alt="İmage" class="mr-1">
+                                    <div class="media-body">
+                                      <p style="margin: 0px;padding:0px;">
+                                        <span><a data-dismiss="modal" [routerLink]="['/profil',sub.id]" routerLinkActive="router-link-active"  style="color: black;"><b>{{sub.name}} {{sub.lastName}}</b></a></span>
+                                        <button (click)="FollowUserFromProfile(sub,button)" #button class="btn btn-success btn-sm float-right followTextIn">
+                                          Takiptesin
+                                        </button>
+                                      </p>
+                                      <span>{{sub.userName}}</span>
+                                    </div>
+                                  </div>
+                                </li>
+                              </ul>
+                            </div>
+                            <hr>
+                          </div>
+                      </div>
+                  </div>
+                <p >
+                  <button class="btn followTextIn" (click)="resetSearchValue()" style="margin: 0px;padding: 0px;" data-toggle="modal" data-target="#followings">Takip</button>
+                </p>
+              </li>
+              <li *ngIf="!user.isCurrentUser" class="list-group-item  flex-fill text-center followText" >
+                <b>{{followerCount}}</b>
+                  <div class="modal fade" id="followings">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2 class="modal-title">Takip</h2>
+                                <button class="close" type="button" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                              <div *ngIf="user.followings.length == 0" class="alert alert-warning">
+                                Bu kullanıcı henüz kimseyi takip etmemiş
+                              </div>
+                              <div class="form-group">
+                                <input type="text" placeholder="Ara..." [(ngModel)]="searchValue" name="searchName" class="p-2 form-control">
+                              </div>
+                              <ul class="list-group">
+                                <li class="list-group-item" *ngFor="let sub of user.followings | searchfilter:searchValue">
+                                  <div class="media text-left">
+                                    <img [src]="sub.imageUrl" width="46px" alt="İmage" class="mr-1">
+                                    <div class="media-body">
+                                      <p style="margin: 0px;padding:0px;">
+                                        <span><a data-dismiss="modal" [routerLink]="['/profil',sub.id]" routerLinkActive="router-link-active"  style="color: black;"><b>{{sub.name}} {{sub.lastName}}</b></a></span>
+                                        <button *ngIf="sub.isAlreadyFollowed && !sub.isCurrentUser" (click)="FollowUser(sub)"  class="float-right btn btn-success followTextIn">
+                                          Takiptesin
+                                        </button>
+                                        <button *ngIf="!sub.isAlreadyFollowed  && !sub.isCurrentUser" (click)="FollowUser(sub)"  class="float-right btn btn-primary followTextIn">
+                                          Takip Et
+                                        </button>
+                                      </p>
+                                      <span>{{sub.userName}}</span>
+                                    </div>
+                                  </div>
+                                </li>
+                              </ul>
+                            </div>
+                            <hr>
+                          </div>
+                      </div>
+                  </div>
+                <p >
+                  <button class="btn followTextIn" (click)="resetSearchValue()" style="margin: 0px;padding: 0px;" data-toggle="modal" data-target="#followings">Takip</button>
+                </p>
+              </li>
+            </ul>
+            <hr>
+            <div class="my-3" *ngIf="user.isCurrentUser">
+              <span class="badge badge-primary">{{badgeBegin}}</span>
+              <span class="badge badge-primary float-right">{{badgeEnd}}</span>
+              <h5 class="text-center followTextIn">Bir Sonraki rozete doğru gelişimin</h5>
+              <progress-bar [progress]="badgeProgress" [color]="'green'">
+              </progress-bar>
+            </div>
+          </div>
+        </div>
+        <hr />
+      </div>
+    </div>
+    <div class="row" >
+      <div class="col">
+        <ul class="list-group list-group-horizontal">
+          <li style="cursor: pointer;" (click)="change(first,second,third,first,1)" #first class="list-group-item flex-fill links">Profil Bilgileri</li>
+          <li style="cursor: pointer;"  (click)="change(first,second,third,second,2)" #second class="list-group-item flex-fill links">Paylaştığım Postlar</li>
+          <li style="cursor: pointer;"  (click)="change(first,second,third,third,3)" #third class="list-group-item flex-fill links">Beğendiğim Postlar</li>
+        </ul>
+      </div>
+    </div>
+    <div class="row"  >
+      <div class="col">
+        <div class="row  px-3" *ngIf="selectedTabIndex == 1">
+          <div class="col" *ngIf="user.isCurrentUser" style="border: 1px solid rgba(0,0,0,.125); border-top: none;">
+            <div class="my-2 p-2">
+              <h3 class="text-primary mb-2">Üyelik Bilgileri</h3>
+            <form action="" class="my-2" (ngSubmit)="UpdateUser()" >
+              <div class="form-group">
+                <img [src]="ImageUrl ? ImageUrl : 'assets/img/profil.png'" name="file" class="img-fluid" style="width: 80px;"  alt="Yaşlı tilki forum sitesi kullanıcının geçici profil resmini tutan alan">
+              <input type="file" class="my-3 ml-3" [(ngModel)]="asb" required #file="ngModel" name="file" (change)="selectImage($event.target.files)">
+              </div>
+              <div class="form-row">
+                <div class="form-group col-sm-6">
+                  <label for="name">Ad</label>
+                  <input type="text" name="name" #name="ngModel" required minlength="3" maxlength="35" value="user.name" [(ngModel)]="user.name" class="form-control" id="name"/>
+                  <div class="text-danger m-1" *ngIf="name.invalid && name.touched">
+                    <p *ngIf="name.errors.required">Ad alanı girilmesi gereklidir</p>
+                    <p *ngIf="name.errors.maxlength">Ad alanına en fazla 25 karakter girilebilir</p>
+                    <p *ngIf="name.errors.minlength">Ad alanına en az 3 karakter girilebilir</p>
+                  </div>
+                </div>
+                <div class="form-group col-sm-6">
+                  <label for="name">Soyad</label>
+                  <input type="text" name="lastName" #lastName="ngModel" required minlength="2" maxlength="35"  value="user.lastName" [(ngModel)]="user.lastName" class="form-control" id="lastName"/>
+                  <div class="text-danger m-1" *ngIf="lastName.invalid && lastName.touched">
+                    <p *ngIf="lastName.errors.required">Soyad alanı girilmesi gereklidir</p>
+                    <p *ngIf="lastName.errors.maxlength">Soyad alanına en fazla 25 karakter girilebilir</p>
+                    <p *ngIf="lastName.errors.minlength">Soyad alanına en az 2 karakter girilebilir</p>
+                  </div>
+                </div>
+              </div>
+                <div class="form-group">
+                  <label for="name">Kullanıcı Adı</label>
+                  <input type="text" name="userName" #userName="ngModel" required minlength="6" maxlength="25"  value="user.userName" [(ngModel)]="user.userName" class="form-control" id="userName"/>
+                  <div class="text-danger m-1" *ngIf="userName.invalid && userName.touched">
+                    <p *ngIf="userName.errors.required">Kullanıcı adı alanı girilmesi gereklidir</p>
+                    <p *ngIf="userName.errors.maxlength">Kullanıcı adı alanına en fazla 25 karakter girilebilir</p>
+                    <p *ngIf="userName.errors.minlength">Kullanıcı adı alanına en az 3 karakter girilebilir</p>
+                  </div>
+                </div>
+                <div class="form-group ">
+                  <label for="name">Email</label>
+                  <input type="text" name="email" #email="ngModel" required minlength="3" maxlength="40"  value="user.email" [(ngModel)]="user.email" class="form-control" id="email"/>
+                  <div class="text-danger m-1" *ngIf="email.invalid && email.touched">
+                    <p *ngIf="email.errors.required">Email alanı girilmesi gereklidir</p>
+                    <p *ngIf="email.errors.maxlength">Email alanına en fazla 40 karakter girilebilir</p>
+                    <p *ngIf="email.errors.minlength">Email alanına en az 11 karakter girilebilir</p>
+                  </div>
+                </div>
+              <div class="form-group">
+                <label>Cinsiyet</label>
+                <select name="gender" class="form-control" #gender="ngModel" required value="user.gender" [(ngModel)]="user.gender">
+                  <option [selected]="'male' == user.gender" value="male">
+                    Erkek
+                  </option>
+                  <option [selected]="'female' == user.gender" value="female">
+                    Kadın
+                  </option>
+                </select>
+                <div class="text-danger m-1" *ngIf="gender.invalid && gender.touched">
+                  <p *ngIf="gender.errors.required">Cinsiyet alanı girilmesi gereklidir</p>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Hakkımda</label>
+                <angular-editor  placeholder="Kendiniz hakkınızda bilgileri girerek etkileşimi artırabilirsin" class="control" [(ngModel)]="user.about" name="about"  [config]="editorConfig"></angular-editor>
+              </div>
+              <div class="form-group">
+                <label>Üniversite</label>
+                <select [(ngModel)]="user.universityId" #university="ngModel" required minlength="3" maxlength="25"  name="universityId" class="form-control">
+                  <option *ngFor="let uni of data.universities" [selected]="uni.id == user.universityId" value="{{ uni.id }}">
+                    {{ uni.name }}
+                  </option>
+                </select>
+                <div class="text-danger m-1" *ngIf="university.invalid && university.touched">
+                  <p *ngIf="university.errors.required">Üniversite alanı girilmesi gereklidir</p>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Bölüm</label>
+                <select [(ngModel)]="user.departmentId" #department="ngModel" required name="departmentId" class="form-control" >
+                  <option *ngFor="let dep of data.departments" [selected]="dep.id == user.departmentId" value="{{ dep.id }}">
+                    {{ dep.name }}
+                  </option>
+                </select>
+                <div class="text-danger m-1" *ngIf="department.invalid && department.touched">
+                  <p *ngIf="department.errors.required">Bölüm alanı girilmesi gereklidir</p>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-sm-6">
+                  <label for="name">Instagram Linki</label>
+                  <input type="text" name="instagramLink" value="user.instagramLink" [(ngModel)]="user.instagramLink" class="form-control" id="instagramLink"/>
+                  <div class="alert alert-warning mt-1">
+                    <small>Instagram profilinize girip arama sekmesini olduğu gibi kopyalayarak yapıştırınız</small>
+                  </div>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label for="name">Twitter Linki</label>
+                    <input type="text" name="twitterLink" #twitterLink="ngModel" value="user.twitterLink" [(ngModel)]="user.twitterLink" class="form-control" id="twitterLink"/>
+                    <div class="alert alert-warning mt-1">
+                      <small>Twitter profilinize girip arama sekmesini olduğu gibi kopyalayarak yapıştırınız</small>
+                    </div>
+                </div>
+              </div>
+              <div class="form--group">
+                <button class="btn btn-primary btn-block">Güncelle</button>
+              </div>
+            </form>
+            </div>
+          </div>
+          <div class="col" *ngIf="!user.isCurrentUser" style="border: 1px solid rgba(0,0,0,.125); border-top: none;">
+            <div class="my-2 p-2">
+              <h3 class="text-primary mb-2">Üyelik Bilgileri</h3>
+            <form action="" class="my-2" (ngSubmit)="UpdateUser()" >
+              <div class="form-row">
+                <div class="form-group col-sm-6">
+                  <label for="name">Ad</label>
+                  <p
+                    name="name"
+                    class="form-control"
+                    id="name"
+                  >{{user.name}}</p>
+                </div>
+                <div class="form-group col-sm-6">
+                  <label for="name">Soyad</label>
+                  <p
+                    name="name"
+                    class="form-control"
+                    id="name"
+                  >{{user.lastName}}</p>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="name">Kullanıcı Adı</label>
+                <p
+                  name="name"
+                  class="form-control"
+                  id="name"
+                >{{user.userName}}</p>
+              </div>
+              <div class="form-group">
+                <label>Cinsiyet</label>
+                <p
+                  name="name"
+                  class="form-control"
+                  id="name"
+                >{{user.gender == "male" ? "Erkek":"Kadın"}}</p>
+              </div>
+                <div class="form-group ">
+                  <label>Üniversite</label>
+                  <p
+                  name="name"
+                  class="form-control"
+                  id="name"
+                >{{user.universityName}}</p>
+                </div>
+              <div class="form-group ">
+                <label>Bölüm</label>
+                <p
+                name="name"
+                class="form-control"
+                id="name"
+              >{{user.departmentName}}</p>
+              </div>
+            </form>
+            </div>
+          </div>
+        </div>
+        <div class="row my-2 p-2" *ngIf="selectedTabIndex == 2">
+          <div class="col-md-6">
+            <p class="h3">
+              <span class="toggleButton"><button
+              class="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              data-target="#collapseUniPublish"
+            >
+            <i class="fas fa-sliders-h"></i>
+          </button></span>Üniversiteler Altında Paylaşılan Postlar</p>
+            <div>
+              <div class="div alert alert-warning" *ngIf="posts.uniposts.length == 0">
+                Henüz hiç gönderi paytlaşmadın. Hadi hemen bir tane paylaş ...
+              </div>
+              <ul class="list-group" id="collapseUniPublish" >
+                <li class="list-group-item bg-light my-2" *ngFor="let post of posts.uniposts;let i = index" style="border: 1px solid rgba(0,0,0,.125);">
+                  <div class="card">
+                    <div class="card-header">
+                      <b>{{post.uniName}}</b>
+                    </div>
+                    <div class="card-body">
+                      <h4 style="word-wrap: break-word;">{{post.title}}</h4>
+                      <p>
+                        <span class="text-muted">{{user.userName}}</span>
+                        <span class="text-muted float-right">{{post.publishDate | date}}</span>
+                      </p>
+                      <span style="word-wrap: break-word;" [innerHTML]="post.content"></span>
+                      <hr>
+                      <p>
+                      <span>
+                        <button *ngIf="!post.alreadyLiked" (click)="likeUniPost(post,post.id,i)" class="bg-light" style=" border: none;" >
+                          🤍
+                        </button>
+                        <button *ngIf="post.alreadyLiked" (click)="likeUniPost(post,post.id,i)" class="bg-light text-danger" style=" border: none;">
+                          &#10084;
+                        </button>
+                        <span class="ml-1">{{post.likeCount}}</span>
+                      </span>
+                      <span>
+                        <a [routerLink]="['/universite-postlari',post.nameUrl,'detay',post.id]" class="btn btn-primary float-right">Detaya Git</a>
+                      </span>
+                      </p>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <hr>
+          </div>
+          <div class="col-md-6">
+            <p class="h3"><span class="toggleButton"><button
+              class="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              data-target="#collapseCatPublish"
+            >
+            <i class="fas fa-sliders-h"></i>
+          </button></span>Kategoriler Altında Paylaşılan Postlar</p>
+            <div>
+              <div class="div alert alert-warning" *ngIf="posts.catposts.length == 0">
+                Henüz hiç gönderi paytlaşmadın. Hadi hemen bir tane paylaş ...
+              </div>
+              <ul class="list-group" id="collapseCatPublish">
+                <li class="list-group-item bg-light my-2" *ngFor="let post of posts.catposts;let i = index" style="border: 1px solid rgba(0,0,0,.125);">
+                  <div class="card">
+                    <div class="card-header">
+                      <b>{{post.catName}}</b>
+                    </div>
+                    <div class="card-body">
+                      <h4 style="word-wrap: break-word;">{{post.title}}</h4>
+                      <p>
+                        <span class="text-muted">{{user.userName}}</span>
+                        <span class="text-muted float-right">{{post.publishDate | date}}</span>
+                      </p>
+                      <span style="word-wrap: break-word;" [innerHTML]="post.content"></span>
+                      <hr>
+                      <p >
+                      <span>
+                        <button *ngIf="!post.alreadyLiked" (click)="likeCatPost(post,post.id,i)" class="bg-light" style=" border: none;" >
+                          🤍
+                        </button>
+                        <button *ngIf="post.alreadyLiked" (click)="likeCatPost(post,post.id,i)" class="bg-light text-danger" style=" border: none;">
+                          &#10084;
+                        </button>
+                        <span class="ml-1">{{post.likeCount}}</span>
+                      </span>
+                      <span>
+                        <a [routerLink]="['/kategori-postlari',post.catNameUrl,post.id]" class="btn btn-primary float-right">Detaya Git</a>
+                      </span>
+                      </p>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <hr>
+          </div>
+        </div>
+        <div class="row my-2 p-2" *ngIf="selectedTabIndex == 3">
+          <div class="col-md-6">
+            <p class="h3">
+              <span class="toggleButton">
+                <button
+                  class="navbar-toggler"
+                  type="button"
+                  data-toggle="collapse"
+                  data-target="#collapseUniLike">
+                  <i class="fas fa-sliders-h"></i>
+                </button>
+              </span>Üniversiteler Altında Beğenilen Postlar
+            </p>
+              <div>
+                <div class="div alert alert-warning" *ngIf="likedPosts.uniposts.length == 0">
+                  Henüz hiç gönderi beğenmedin. Hadi hemen bir tane beğen ...
+                </div>
+              <ul class="list-group" id="collapseUniLike">
+                <li class="list-group-item bg-light my-2" *ngFor="let post of likedPosts.uniposts;let i = index" style="border: 1px solid rgba(0,0,0,.125);">
+                  <div class="card">
+                    <div class="card-header">
+                      <b>{{post.uniName}}</b>
+                    </div>
+                    <div class="card-body">
+                      <h4 style="word-wrap: break-word;">{{post.title}}</h4>
+                      <p>
+                        <span class="text-muted">{{post.userName}}</span>
+                        <span class="text-muted float-right">{{post.publishDate | date}}</span>
+                      </p>
+                      <span style="word-wrap: break-word;" [innerHTML]="post.content"></span>
+                      <hr>
+                      <p>
+                      <span>
+                        <button *ngIf="!post.alreadyLiked" (click)="likeUniPost(post,post.id,i)" class="bg-light" style=" border: none;" >
+                          🤍
+                        </button>
+                        <button *ngIf="post.alreadyLiked" (click)="likeUniPost(post,post.id,i)" class="bg-light text-danger" style=" border: none;">
+                          &#10084;
+                        </button>
+                        <span class="ml-1">{{post.likeCount}}</span>
+                      </span>
+                      <span>
+                        <a [routerLink]="['/universite-postlari',post.nameUrl,'detay',post.id]" class="btn btn-primary float-right">Detaya Git</a>
+                      </span>
+                      </p>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <hr>
+          </div>
+          <div class="col-md-6">
+            <p class="h3"><span class="toggleButton"><button
+              class="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              data-target="#collapseCatLike"
+            >
+            <i class="fas fa-sliders-h"></i>
+          </button></span>Kategoriler Altında Beğenilen Postlar</p>
+            <div>
+              <div class="div alert alert-warning" *ngIf="likedPosts.catposts.length == 0">
+                Henüz hiç gönderi beğenmedin. Hadi hemen bir tane beğen ...
+              </div>
+              <ul class="list-group" id="collapseCatLike">
+                <li class="list-group-item bg-light my-2" *ngFor="let post of likedPosts.catposts;let i = index" style="border: 1px solid rgba(0,0,0,.125);">
+                  <div class="card">
+                    <div class="card-header">
+                      <b>{{post.catName}}</b>
+                    </div>
+                    <div class="card-body">
+                      <h4 style="word-wrap: break-word;">{{post.title}}</h4>
+                      <p>
+                        <span class="text-muted">{{post.userName}}</span>
+                        <span class="text-muted float-right">{{post.publishDate | date}}</span>
+                      </p>
+                      <span style="word-wrap: break-word;" [innerHTML]="post.content"></span>
+                      <hr>
+                      <p >
+                      <span>
+                        <button *ngIf="!post.alreadyLiked" (click)="likeCatPost(post,post.id,i)" class="bg-light" style=" border: none;" >
+                          🤍
+                        </button>
+                        <button *ngIf="post.alreadyLiked" (click)="likeCatPost(post,post.id,i)" class="bg-light text-danger" style=" border: none;">
+                          &#10084;
+                        </button>
+                        <span class="ml-1">{{post.likeCount}}</span>
+                      </span>
+                      <span>
+                        <a [routerLink]="['/kategori-postlari',post.catNameUrl,post.id]" class="btn btn-primary float-right">Detaya Git</a>
+                      </span>
+                      </p>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <hr>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

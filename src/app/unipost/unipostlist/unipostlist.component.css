@@ -1,0 +1,69 @@
+.departmentLink{
+  font-size: 0.9rem;
+}
+.deps:hover{
+  background-color:#003049;
+}
+.departmentLink:hover{
+  text-decoration: none;
+  color: white;
+}
+#popular{
+  display: block;
+}
+#deparmentbutton{
+  display: none;
+}
+.postImage{
+  width: 64px;
+}
+.commentImage{
+  width: 64px;
+}
+.uniName{
+  color:black;
+  font-size: 1.5rem  !important;
+}
+.postTitle{
+  font-size: 1.2rem ;
+}
+@media only screen and (max-width: 600px){
+  #deparmentbutton{
+    display: inline-block;
+  }
+  .postImage {
+    width: 48px;
+  }
+  .commentImage{
+    width: 48px;
+  }
+}
+@media only screen and (min-width: 600px){
+  #collapseDep{
+    display: block;
+  }
+}
+
+@media only screen and (max-width: 768px){
+  .postTitle{
+    font-size: 1rem;
+  }
+}
+
+@media only screen and (max-width: 992px) {
+  #popular{
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 1200px) {
+  .uniName{
+    font-size: 1.4rem  !important;
+  }
+  .postContent{
+    font-size: 0.9rem !important;
+  }
+  .texts{
+    font-size: 0.9rem !important;
+  }
+}
